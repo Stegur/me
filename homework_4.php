@@ -26,11 +26,65 @@ foreach ($continents as $continent => $animals)
     }
 }
 
+
+
+echo '<h2>Europe</h2>';
 for ($i = 0; $i < count($firstWordArray); $i++)
 {
-    echo $firstWordArray [$i] . ' ' . $secondWordArray [$i] .'<br>';
-
+    if($firstWordArray [$i] == 'Genetta' or $firstWordArray [$i] == 'Balaenoptera' or $firstWordArray [$i] == 'Alces')
+    {
+        echo $firstWordArray [$i] . ' ' . $secondWordArray [$i] .'<br>';
+        }
 }
+
+echo '<h2>Asia</h2>';
+for ($i = 0; $i < count($firstWordArray); $i++)
+{
+    if($firstWordArray [$i] == 'Naemorhedus' or $firstWordArray [$i] == 'Elephas')
+    {
+        echo $firstWordArray [$i] . ' ' . $secondWordArray [$i] .'<br>';
+    }
+}
+
+echo '<h2>Antarctica</h2>';
+for ($i = 0; $i < count($firstWordArray); $i++)
+{
+    if($firstWordArray [$i] == 'Pygoscelis' or $firstWordArray [$i] == 'Leptonychotes')
+    {
+        echo $firstWordArray [$i] . ' ' . $secondWordArray [$i] .'<br>';
+    }
+}
+
+echo '<h2>North America</h2>';
+for ($i = 0; $i < count($firstWordArray); $i++)
+{
+    if($firstWordArray [$i] == 'Rangifer' or $firstWordArray [$i] == 'Lepus' or $firstWordArray [$i] == 'Gulo')
+    {
+        echo $firstWordArray [$i] . ' ' . $secondWordArray [$i] .'<br>';
+    }
+}
+
+echo '<h2>South America</h2>';
+for ($i = 0; $i < count($firstWordArray); $i++)
+{
+    if($firstWordArray [$i] == 'Hydrochoerus' or $firstWordArray [$i] == 'Furipterus')
+    {
+        echo $firstWordArray [$i] . ' ' . $secondWordArray [$i] .'<br>';
+    }
+}
+
+echo '<h2>Australia</h2>';
+for ($i = 0; $i < count($firstWordArray); $i++)
+{
+    if($firstWordArray [$i] == 'Ornithorhynchus' or $firstWordArray [$i] == 'Phascolarctos')
+    {
+        echo $firstWordArray [$i] . ' ' . $secondWordArray [$i] .'<br>';
+    }
+}
+
+
+
+
 
 
 

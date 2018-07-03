@@ -16,13 +16,23 @@ foreach ($continents as $continent => $animals)
     foreach ($animals as $animal)
     {
         $twoWordsAnimal = explode(' ', $animal);
+
         if (count($twoWordsAnimal) == 2){                   //исключил 'Panthera tigris tigris', у которого 3 слова
-            $twoWordsAnimalArray [] = $animal;
-//            echo '<pre>';
-//            //print_r($twoWordsAnimalArray);
+            $secondWordArray [] = $twoWordsAnimal[1];
+            shuffle($secondWordArray);
+            $firstWordArray [] = $twoWordsAnimal[0];
+            shuffle($firstWordArray);
         }
     }
 }
-echo '<pre>';
-print_r($twoWordsAnimalArray);
+
+for ($i = 0; $i < count($firstWordArray); $i++)
+{
+    echo $firstWordArray [$i] . ' ' . $secondWordArray [$i] .'<br>';
+
+}
+
+
+
+
 

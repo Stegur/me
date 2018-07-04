@@ -9,7 +9,7 @@ echo '<pre>';
 foreach ($json as $key => $section) {
 //    print_r($key);
 //    print_r($section);
-    echo '<br>';
+//    echo '<br>';
     if (is_array($section)) {
         foreach ($section as $param => $value) {
 //            var_dump($param);
@@ -27,5 +27,6 @@ foreach ($json as $key => $section) {
     }
 }
 
-
-echo $json['main']['temp'];
+$tempK = $json['main']['temp'];
+$tempC = $tempK - 273.15;
+echo $tempC . '°C';

@@ -1,7 +1,7 @@
 <?php
 
 $continents = [
-    'Africa' => ['Giraffa', 'Hippopotamus', 'Hippotigris'],
+    'Africa' => ['Giraffa', 'Hippopotamus Begemotus', 'Hippotigris'],
     'Europe' => ['Genetta genetta', 'Balaenoptera edeni', 'Alces alces'],
     'Asia' => ['Panthera tigris tigris', 'Naemorhedus goral', 'Elephas maximus'],
     'Antarctica' => ['Pygoscelis antarctica', 'Leptonychotes weddellii'],
@@ -18,15 +18,9 @@ foreach ($continents as $continent => $animals) {
     foreach ($animals as $animal) {
         $twoWordsAnimal = explode(' ', $animal);
         if (count($twoWordsAnimal) == 2) {                   //исключил 'Panthera tigris tigris', у которого 3 слова
-            $secondWordArray [] = $twoWordsAnimal[1];
-            shuffle($secondWordArray);
-            $firstWordArray [] = $twoWordsAnimal[0];
+            list ($firstWord, $secondWord) = $twoWordsAnimal;
+
         }
-    }
-    $newAnimalArray = array_combine($firstWordArray, $secondWordArray);
-    foreach ($newAnimalArray as $key => $value){
-        $newAnimal = $key . ' ' . $value . ', ';
-        echo $newAnimal;
     }
 }
 

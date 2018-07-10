@@ -1,0 +1,18 @@
+[
+  {
+    "firstName": "Jack",
+    "lastName": "Daniels",
+    "age": 148,
+    "address": "Louisville, Kentucky 40210",
+    "email": "Brown-Forman@b-f.com",
+    "phoneNumber": "1-877-819-4280"
+  },
+  {
+    "firstName": "Jim",
+    "lastName": "Beam",
+    "age": 223,
+    "address": "Chicago, IL 60654",
+    "email": "jimbeam@nohave.com",
+    "phoneNumber": "1-877-000-0000"
+  }
+]

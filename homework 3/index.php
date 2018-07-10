@@ -10,6 +10,9 @@ $continents = [
     'Australia' => ['Ornithorhynchus anatinus', 'Phascolarctos cinereus', 'Tachyglossidae'],
 ];
 
+$secondWordArray = [];
+$firstWordArray = [];
+$animalArray = [];
 
 foreach ($continents as $continent => $animals)
 {

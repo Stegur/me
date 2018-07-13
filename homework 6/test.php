@@ -16,9 +16,7 @@ if ($json == null) {
 <body>
 <?php if (!empty($_GET['test'])) {
     echo '<div>Вопрос №' . $_GET['test'] . '</br></div>';
-} ?>
-
-<?php
+}
 
 if (empty($_REQUEST)) {
     echo '<div>Выберите тест: </br>';
@@ -30,25 +28,24 @@ if (empty($_REQUEST)) {
 }
 
 if (!empty($_POST)) {
-    foreach ($json as $number => $values) {
-        if ($_POST['answer'] === $json[$number]['right_answer']) {
-            echo 'Вы верно ответили на вопрос!</br> Выберите другой вопрос </br>';
-            foreach ($json as $number => $values) {
-                echo "<a href=\"test.php?test=$number\">Вопрос №$number</a> ";
-            }
-            echo "<pre>";
-            print_r($_REQUEST);
-            print_r($_REQUEST);
-            exit();
+    for ($i = 1; $i <= count($json); $i++) {
+        if ($_POST['answer'] === $json[$i]['right_answer']) {
+            echo 'Вы верно ответили на вопрос!</br> Выберите другой: </br>';
         } else {
             echo 'Вы дали неверный ответ, повторите тест! </br>';
-            echo "<a href=\"test.php?test=$number\">Повторить тест №$number</a> ";
-            echo "<pre>";
-            print_r($_REQUEST);
-            var_dump($json[1]['right_answer']);
-            exit();
+            echo "<a href=\"test.php?test=$i\">Повторить тест №$i</a> ";
+            echo '</br>';
+//            echo '<pre>';
+//            var_dump($_POST['answer']);
+//            var_dump($json[$i]['right_answer']);
+            break;
         }
     }
+    foreach ($json as $number => $values) {
+        echo '</br>';
+        echo "<a href=\"test.php?test=$number\">Вопрос №$number</a> ";
+    }
+    exit();
 }
 
 
@@ -61,7 +58,7 @@ echo 'Скопируйте ответ (после буквы с точкой) в
 ?>
 
 <form action="test.php" method="post">
-    <div><input type="text" name="answer" placeholder="ответ"></br></br></div>
+    <div><input type="text" name="answer" placeholder="Ответ"></br></br></div>
     <div><input type="submit" value="Отправить"></div>
 </form>
 </br>
@@ -69,7 +66,7 @@ echo 'Скопируйте ответ (после буквы с точкой) в
 <div>
     <?php
     foreach ($json as $number => $values) {
-        echo "<a href=\"test.php?test=$number\">Вопрос №$number </a>";
+        echo "<a href=\"test.php?test=$number\">Вопрос №$number</a> ";
     }
     ?>
 </div>

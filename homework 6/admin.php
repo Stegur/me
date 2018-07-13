@@ -12,7 +12,7 @@
 </form>
 <?php
 if (!empty($_FILES) || array_key_exists('tests', $_FILES)) {
-    move_uploaded_file($_FILES['tests']['tmp_name'], __DIR__ . '/tests.json');
+    move_uploaded_file($_FILES['tests']['tmp_name'], 'tests.json');
     echo '<h2>Файл успешно загружен</h2>';
 } else {
     echo '<h2>Файл не загружен</h2>';

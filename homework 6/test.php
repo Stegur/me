@@ -5,18 +5,24 @@ $rightAnswerCount = 0;
 $wrongAnswerCount = 0;
 
 if (empty($_REQUEST)) {
-    echo 'Вы не передали номер теста в GET-апросе через <code>?test=tests</code></br>';
-    echo '<a href="test.php?test=tests">Начать тест</a>';
+    echo 'Вы не передали номер теста в GET-апросе через <code>?test=testName</code></br>';
+    include 'list.php';
     die();
 }
 
-
-$fileContent = file_get_contents(__DIR__ . "/tests/tests.json") or exit('Неудалось загрузить JSON');
-$json = json_decode($fileContent, true);
-if ($json == null) {
-    exit("Ошибка декодирования JSON");
+if (!empty($_GET)) {
+    $files = scandir(__DIR__ . '/tests/');
+    foreach ($files as $file) {
+        $testName = substr($file, 0, -5);
+        if ($_GET['test'] === $testName) {
+            $fileContent = file_get_contents(__DIR__ . "/tests/{$testName}.json") or exit('Неудалось загрузить JSON');
+            $json = json_decode($fileContent, true);
+            if ($json == null) {
+                exit("Ошибка декодирования JSON");
+            }
+        }
+    }
 }
-
 
 if (!empty($_POST)) {
     foreach ($_POST as $question => $answer) {
@@ -59,30 +65,23 @@ if (!empty($_POST)) {
 </head>
 <body>
 <?php
-foreach ($json
-
-         as $questionNumber => $question) : ?>
-<form action="test.php" method="post">
+foreach ($json as $questionNumber => $question) : ?>
+<form action="test.php?test=<?php echo $_GET['test'] ?>" method="post">
     <fieldset>
         <legend><b>Вопрос №<?php echo $questionNumber . '</b></br>' . $question['question'] ?></legend>
+        <?php for ($i = 1;
+        $i <= count($question['answers'], COUNT_RECURSIVE);
+        $i++) : ?>
         <label><input type="radio" name="<?php echo $questionNumber ?>"
-                      value="<?php echo $question['answers']['A'] ?>"><?php echo $question['answers']['A'] . '</br>' ?>
-        </label>
-        <label><input type="radio" name="<?php echo $questionNumber ?>"
-                      value="<?php echo $question['answers']['B'] ?>"><?php echo $question['answers']['B'] . '</br>' ?>
-        </label>
-        <label><input type="radio" name="<?php echo $questionNumber ?>"
-                      value="<?php echo $question['answers']['C'] ?>"><?php echo $question['answers']['C'] . '</br>' ?>
-        </label>
+                      value="<?php echo $question['answers'][$i] ?>"><?php echo $question['answers'][$i] . '<br>' ?>
+            
+            <?php endfor; ?>
     </fieldset>
-    </br>
+    <br>
     <?php endforeach; ?>
 
     <input type="submit" value="Отправить ответы">
 </form>
-
-<?php //    echo '<pre>';  var_dump($questionNumber); ?>
-
 
 </body>
 </html>

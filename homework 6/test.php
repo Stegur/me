@@ -11,15 +11,14 @@ if (empty($_REQUEST)) {
 }
 
 if (!empty($_GET)) {
-    $files = scandir(__DIR__ . '/tests/');
-    foreach ($files as $file) {
-        $testName = substr($file, 0, -5);
-        if ($_GET['test'] === $testName) {
-            $fileContent = file_get_contents(__DIR__ . "/tests/{$testName}.json") or exit('Неудалось загрузить JSON');
-            $json = json_decode($fileContent, true);
-            if ($json == null) {
-                exit("Ошибка декодирования JSON");
-            }
+    $testName = __DIR__ . "/tests/{$_GET['test']}.json";
+    if (!file_get_contents($testName)){
+        exit('Неудалось загрузить JSON');
+    } else {
+        $fileContent = file_get_contents(__DIR__ . "/tests/{$_GET['test']}.json"); // or
+        $json = json_decode($fileContent, true);
+        if ($json == null) {
+            exit("Ошибка декодирования JSON");
         }
     }
 }
@@ -44,14 +43,14 @@ if (!empty($_POST)) {
     echo "Количество неверных ответов - $wrongAnswerCount </br>";
     if ($rightAnswerCount + $wrongAnswerCount != count($json)) {
         echo 'Вы ответили не на все вопросы</br>';
-        echo '<a href="test.php?test=test">Повторить?</a></br>';
+        echo '<a href="test.php?test=' . $_GET['test'] . '">Повторить?</a></br>';
     } elseif ($wrongAnswerCount == 0) {
         echo 'Поздравляем! Вы превосходно справились с заданием!</br>';
     } elseif ($rightAnswerCount > $wrongAnswerCount) {
         echo 'Поздравляем! Вы хорошо справились с тестом!';
     } else {
         echo 'Вы плохо справились с тестом :( <br>';
-        echo '<a href="test.php?test=test">Повторить?</a></br>';
+        echo '<a href="test.php?test=' . $_GET['test'] . '">Повторить?</a></br>';
     }
     die();
 }

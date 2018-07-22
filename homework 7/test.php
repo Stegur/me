@@ -10,10 +10,10 @@ if (empty($_REQUEST)) {
     die();
 }
 
-if (!empty($_GET)) {
+if (array_key_exists('test', $_GET)) {
     $testName = __DIR__ . "/tests/{$_GET['test']}.json";
-    if (!file_get_contents($testName)){
-        header("Location: 404.php"); // или http_response_code(404); ?
+    if (!file_exists($testName)) {
+        http_response_code(404);
         die();
     } else {
         $fileContent = file_get_contents(__DIR__ . "/tests/{$_GET['test']}.json");

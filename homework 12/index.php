@@ -1,8 +1,6 @@
 <?php
 $connect = mysqli_connect("localhost", "root", "", "libreria");
 
-// TODO опробовать перебрать Case
-
 if (array_key_exists('isbn', $_GET ) && $_GET['isbn'] != NULL) {
     $isbn = strip_tags($_GET['isbn']);
     $sql = "SELECT * FROM books WHERE isbn='{$isbn}'";
@@ -10,7 +8,7 @@ if (array_key_exists('isbn', $_GET ) && $_GET['isbn'] != NULL) {
     $name = strip_tags($_GET['name']);
     $sql = "SELECT * FROM books WHERE name LIKE '%{$name}%'";
 } elseif (array_key_exists('author', $_GET) && $_GET['author'] != NULL) {
-    $author = strip_tags($_GET['author']);                  //todo striptags()
+    $author = strip_tags($_GET['author']);
     $sql = "SELECT * FROM books WHERE author LIKE '%{$author}%'";
 } else {
     $sql = "SELECT * from books";
@@ -21,11 +19,6 @@ if (!$res = mysqli_query($connect, $sql)) {
 } else {
     $data = mysqli_fetch_assoc($res);
 }
-//strip_tags()
-//echo "<pre>";
-//var_dump($author);
-//var_dump($name);
-//var_dump($isbn);
 
 ?>
 

@@ -1,15 +1,14 @@
 <?php
 $connect = mysqli_connect("localhost", "root", "", "libreria");
+// todo проверить на ошибки при пустом запросе
 
-if (array_key_exists('isbn', $_GET ) && $_GET['isbn'] != NULL) {
-    $isbn = strip_tags($_GET['isbn']);
-    $sql = "SELECT * FROM books WHERE isbn='{$isbn}'";
-} elseif (array_key_exists('name', $_GET) && $_GET['name'] != NULL) {
-    $name = strip_tags($_GET['name']);
-    $sql = "SELECT * FROM books WHERE name LIKE '%{$name}%'";
-} elseif (array_key_exists('author', $_GET) && $_GET['author'] != NULL) {
-    $author = strip_tags($_GET['author']);
-    $sql = "SELECT * FROM books WHERE author LIKE '%{$author}%'";
+if (!empty($_GET)) {
+    if (array_key_exists('isbn', $_GET) || $_GET['isbn'] != NULL || array_key_exists('name', $_GET) || $_GET['name'] != NULL || array_key_exists('author', $_GET) || $_GET['author'] != NULL) {
+        $isbn = strip_tags($_GET['isbn']);
+        $name = strip_tags($_GET['name']);
+        $author = strip_tags($_GET['author']);
+        $sql = "SELECT * FROM `books` WHERE isbn LIKE '%{$isbn}%' AND author LIKE '%{$author}%' and name LIKE '%{$name}%'";
+    }
 } else {
     $sql = "SELECT * from books";
 }
@@ -21,7 +20,6 @@ if (!$res = mysqli_query($connect, $sql)) {
 }
 
 ?>
-
 
 <!doctype html>
 <html lang="ru">
@@ -50,10 +48,17 @@ if (!$res = mysqli_query($connect, $sql)) {
 </head>
 <body>
 <h1>Библиотека успешного человека</h1>
+
+<?php
+if (!empty($_GET)) {
+    echo "<p><a href=\"index.php\">Отобразить все книги</a></p>";
+}
+?>
+
 <form action="index.php" method="get">
-    <input type="text" placeholder="ISBN" name="isbn">
-    <input type="text" placeholder="Название книги" name="name">
-    <input type="text" placeholder="Автор книги" name="author">
+    <input type="text" placeholder="ISBN" name="isbn" <?= array_key_exists('isbn', $_GET) ? 'value="'.$_GET['isbn'].'"' : 'value=""'?>>
+    <input type="text" placeholder="Название книги" name="name" <?= array_key_exists('name', $_GET) ? 'value="'.$_GET['name'].'"' : 'value=""'?>>
+    <input type="text" placeholder="Автор книги" name="author" <?= array_key_exists('author', $_GET) ? 'value="'.$_GET['author'].'"' : 'value=""'?>>
     <input type="submit" value="Поиск">
 </form>
 <br>
@@ -78,8 +83,7 @@ if (!$res = mysqli_query($connect, $sql)) {
         </tr>
     <?php endforeach;
     if (!$data) {
-        echo "По Вашему запросу ничего не найдено. Вы можете уточнить запрос или обобразить все доступные книги<br>";
-        echo "<a href='index.php'>Отобразить?</a><br>";
+        echo "По Вашему запросу ничего не найдено. Вы можете уточнить запрос или отобразить все доступные книги<br>";
     }
     ?>
     </tbody>

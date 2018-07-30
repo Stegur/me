@@ -1,5 +1,5 @@
 <?php
-$connect = mysqli_connect("localhost", "root", "", "libreria");
+$connect = mysqli_connect("localhost", "root", "", "books");
 
 if (!empty($_GET)) {
     if (array_key_exists('isbn', $_GET) || $_GET['isbn'] ||
@@ -19,7 +19,7 @@ if (!empty($_GET)) {
 }
 
 if (!$res = mysqli_query($connect, $sql)) {
-    echo 'Не правильный запрос';
+    echo 'Неправильный запрос';
 } else {
     $data = mysqli_fetch_assoc($res);
 }
@@ -49,6 +49,7 @@ if (!$res = mysqli_query($connect, $sql)) {
             padding: 5px;
             border: solid 1px gray;
         }
+        
         tr:hover {
             background: #eaeaea;
         }

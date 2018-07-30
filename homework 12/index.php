@@ -1,13 +1,18 @@
 <?php
 $connect = mysqli_connect("localhost", "root", "", "libreria");
-// todo проверить на ошибки при пустом запросе
 
 if (!empty($_GET)) {
-    if (array_key_exists('isbn', $_GET) || $_GET['isbn'] != NULL || array_key_exists('name', $_GET) || $_GET['name'] != NULL || array_key_exists('author', $_GET) || $_GET['author'] != NULL) {
+    if (array_key_exists('isbn', $_GET) || $_GET['isbn'] ||
+        array_key_exists('name', $_GET) || $_GET['name'] ||
+        array_key_exists('author', $_GET) || $_GET['author'] ||
+        array_key_exists('genre', $_GET) || $_GET['genre'] ||
+        array_key_exists('year', $_GET) || $_GET['year']) {
         $isbn = strip_tags($_GET['isbn']);
         $name = strip_tags($_GET['name']);
         $author = strip_tags($_GET['author']);
-        $sql = "SELECT * FROM `books` WHERE isbn LIKE '%{$isbn}%' AND author LIKE '%{$author}%' and name LIKE '%{$name}%'";
+        $genre = strip_tags($_GET['genre']);
+        $year = strip_tags($_GET['year']);
+        $sql = "SELECT * FROM `books` WHERE isbn LIKE '%{$isbn}%' AND author LIKE '%{$author}%' and name LIKE '%{$name}%' and year LIKE '%{$year}%' and genre LIKE '%{$genre}%'";
     }
 } else {
     $sql = "SELECT * from books";
@@ -28,7 +33,7 @@ if (!$res = mysqli_query($connect, $sql)) {
     <title>La libreria</title>
     <style>
         table {
-            width: 1250px;
+            table-layout: auto;
             border: solid 1px gray;
             border-collapse: collapse;
             border-spacing: 0;
@@ -44,6 +49,14 @@ if (!$res = mysqli_query($connect, $sql)) {
             padding: 5px;
             border: solid 1px gray;
         }
+        tr:hover {
+            background: #eaeaea;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
     </style>
 </head>
 <body>
@@ -51,14 +64,21 @@ if (!$res = mysqli_query($connect, $sql)) {
 
 <?php
 if (!empty($_GET)) {
-    echo "<p><a href=\"index.php\">Отобразить все книги</a></p>";
+    echo "<p><button><a href=\"index.php\">Отобразить все книги</a></button></p>";
 }
 ?>
 
 <form action="index.php" method="get">
-    <input type="text" placeholder="ISBN" name="isbn" <?= array_key_exists('isbn', $_GET) ? 'value="'.$_GET['isbn'].'"' : 'value=""'?>>
-    <input type="text" placeholder="Название книги" name="name" <?= array_key_exists('name', $_GET) ? 'value="'.$_GET['name'].'"' : 'value=""'?>>
-    <input type="text" placeholder="Автор книги" name="author" <?= array_key_exists('author', $_GET) ? 'value="'.$_GET['author'].'"' : 'value=""'?>>
+    <input type="text" placeholder="ISBN"
+           name="isbn" <?= array_key_exists('isbn', $_GET) ? 'value="' . $_GET['isbn'] . '"' : 'value=""' ?>>
+    <input type="text" placeholder="Название книги"
+           name="name" <?= array_key_exists('name', $_GET) ? 'value="' . $_GET['name'] . '"' : 'value=""' ?>>
+    <input type="text" placeholder="Автор книги"
+           name="author" <?= array_key_exists('author', $_GET) ? 'value="' . $_GET['author'] . '"' : 'value=""' ?>>
+    <input type="text" placeholder="Жанр"
+           name="genre" <?= array_key_exists('genre', $_GET) ? 'value="' . $_GET['genre'] . '"' : 'value=""' ?>>
+    <input type="text" placeholder="Год выпуска"
+           name="year" <?= array_key_exists('year', $_GET) ? 'value="' . $_GET['year'] . '"' : 'value=""' ?>>
     <input type="submit" value="Поиск">
 </form>
 <br>
@@ -75,15 +95,15 @@ if (!empty($_GET)) {
     <tbody>
     <?php foreach ($res as $row) : ?>
         <tr>
-            <td><?php echo $row['name']?></td>
-            <td><?php echo $row['author']?></td>
-            <td><?php echo $row['year']?></td>
-            <td><?php echo $row['genre']?></td>
-            <td><?php echo $row['isbn']?></td>
+            <td><?php echo $row['name'] ?></td>
+            <td><?php echo $row['author'] ?></td>
+            <td><?php echo $row['year'] ?></td>
+            <td><?php echo $row['genre'] ?></td>
+            <td><?php echo $row['isbn'] ?></td>
         </tr>
     <?php endforeach;
     if (!$data) {
-        echo "По Вашему запросу ничего не найдено. Вы можете уточнить запрос или отобразить все доступные книги<br>";
+        echo "<p>По Вашему запросу ничего не найдено. Вы можете уточнить запрос или отобразить все доступные книги</p>";
     }
     ?>
     </tbody>

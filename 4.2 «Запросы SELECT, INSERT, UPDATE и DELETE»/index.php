@@ -1,0 +1,112 @@
+<?php
+
+define('DB_DRIVER', 'mysql');
+define('DB_HOST', 'localhost');
+define('DB_NAME', 'todo');
+define('DB_USER', 'root');
+define('DB_PASS', '');
+
+$sql = "SELECT * FROM tasks";
+
+$connect_str = DB_DRIVER . ':host=' . DB_HOST . ';dbname=' . DB_NAME;
+$db = new PDO($connect_str, DB_USER, DB_PASS);
+
+$result = $db->query($sql);
+
+$error_array = $db->errorInfo();
+
+if ($db->errorCode() != 0000) {
+    echo "SQL ошибка: " . $error_array[2] . '<br>';
+}
+
+if (array_key_exists('add', $_POST)) {
+    $add = "INSERT INTO `tasks`(`description`, `is_done`, `date_added`) VALUES ('{$_POST['add']}', 0, CURRENT_TIMESTAMP)";
+    $db->exec($add);
+    header('Location: index.php');
+}
+
+if (array_key_exists('action', $_GET) && $_GET['action'] == 'delete') {
+    $delete = "DELETE FROM `tasks` WHERE id={$_GET['id']} LIMIT 1";
+    $db->exec($delete);
+    header('Location: index.php');
+}
+
+if (array_key_exists('action', $_GET) && $_GET['action'] == 'done') {
+    $done = "UPDATE `tasks` SET `is_done`=1 WHERE id={$_GET['id']} LIMIT 1";
+    $db->exec($done);
+    header('Location: index.php');
+}
+
+
+//echo '<pre>';
+//var_dump(md5($srt));
+
+
+
+?>
+
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>TODO List</title>
+    <style>
+        table {
+            table-layout: auto;
+            border: solid 1px gray;
+            border-collapse: collapse;
+            border-spacing: 0;
+        }
+
+        thead {
+            background: #dfdfdf;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        td {
+            padding: 5px;
+            border: solid 1px gray;
+        }
+
+        tr:hover {
+            background: #eaeaea;
+        }
+        .done {
+            color: green;
+        }
+        .process {
+            color: #cbcb00;
+        }
+
+    </style>
+</head>
+<body>
+<h1>Список дел на сегодня</h1>
+<form action="index.php" method="post">
+    <input type="text" name="add" value=""> <input type="submit">
+</form><br>
+<table>
+    <thead>
+    <tr>
+        <td>Описание задачи</td>
+        <td>Дата добавления</td>
+        <td>Статус</td>
+        <td></td>
+    </tr>
+    </thead>
+    <tbody>
+ <?php foreach ($result as $rows) : ?>
+ <tr>
+     <td><?php echo $rows['description'] ?></td>
+     <td><?php echo $rows['date_added'] ?></td>
+     <td><?=  ($rows['is_done'] == 1) ?  '<span class="done">Выполнено</span>' : '<span class="process">В процессе</span>'?></td>
+     <td><a href="index.php?action=edit&id=<?= $rows['id'] ?>">Изменить</a> <a href="index.php?action=done&id=<?= $rows['id'] ?>">Выполнить</a> <a href="index.php?action=delete&id=<?= $rows['id'] ?>">Удалить</a></td>
+ </tr>
+ 
+<?php endforeach;?>
+    </tbody>
+</table>
+
+</body>
+</html>

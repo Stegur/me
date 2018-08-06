@@ -20,23 +20,26 @@ if ($db->errorCode() != 0000) {
 }
 
 if (array_key_exists('add', $_POST)) {
-    $add = "INSERT INTO `tasks`(`description`, `is_done`, `date_added`) VALUES ('{$_POST['add']}', 0, CURRENT_TIMESTAMP)";
+    $add = "INSERT INTO `tasks`(`description`, `is_done`, `date_added`) VALUES ('" . strip_tags($_POST['add']) . "', 0, CURRENT_TIMESTAMP)";
     $db->exec($add);
     header('Location: index.php');
 }
 if (array_key_exists('action', $_GET)) {
     if ($_GET['action'] == 'delete') {
-        $delete = "DELETE FROM `tasks` WHERE id={$_GET['id']} LIMIT 1";
+        $delete = "DELETE FROM `tasks` WHERE id=" . (int)$_GET['id'] . " LIMIT 1";
         $db->exec($delete);
         header('Location: index.php');
     }
     
     if ($_GET['action'] == 'done') {
-        $done = "UPDATE `tasks` SET `is_done`=1 WHERE id={$_GET['id']} LIMIT 1";
+        $done = "UPDATE `tasks` SET `is_done`=1 WHERE id=" . (int)$_GET['id'] . " LIMIT 1";
         $db->exec($done);
         header('Location: index.php');
     }
 }
+
+//echo '<pre>';
+//var_dump($_GET);
 
 ?>
 
@@ -75,6 +78,14 @@ if (array_key_exists('action', $_GET)) {
         .process {
             color: #cbcb00;
         }
+        
+        form {
+            display: inline-block;
+        }
+        
+        p {
+            margin: 0 0 10px 10px;
+        }
 
     </style>
 </head>
@@ -83,28 +94,36 @@ if (array_key_exists('action', $_GET)) {
 
 <?php
 if (array_key_exists('action', $_GET) && $_GET['action'] == 'edit') {
-    echo '<form action="index.php?id=' . $_GET['id'] . '" name="edit" method="post">
+    echo '<form action="index.php?id=' . (int)$_GET['id'] . '" name="edit" method="post">
         <input type="text" name="edit" value="';
     
-    $sql = "SELECT * FROM `tasks` WHERE id = " . $_GET['id'];
+    $sql = "SELECT * FROM `tasks` WHERE id=" . (int)$_GET['id'];
     $values = $db->query($sql);
     foreach ($values as $value) {
         echo $value['description'];
     }
     
-    echo '" > <input type = "submit" value = "Сохранить" ></form><br>';
+    echo '" > <input type = "submit" value = "Сохранить" ></form>';
 } else {
     echo '<form action="index.php" method="post">
             <input type="text" name="add" placeholder="Описание задачи" value=""> <input type="submit" value="Добавить">
-          </form>
-          <br>';
+          </form>';
 }
 if (array_key_exists('edit', $_POST)) {
-    $edit = "UPDATE tasks SET description='" . $_POST['edit'] . "' WHERE id=" . $_GET['id'] . " LIMIT 1";
+    $edit = "UPDATE tasks SET description='" . strip_tags($_POST['edit']) . "' WHERE id=" . (int)$_GET['id'] . " LIMIT 1";
     $db->exec($edit);
     header('Location: index.php');
 } ?>
 
+<form action="index.php" method="post">
+<p>Сортировать по:
+<select name="list">
+    <option value="date">дате обновления</option>
+    <option value="done">статусу</option>
+    <option value="description">описанию</option>
+</select>
+    <input type="submit" value="Отсортировать">
+</form></p>
 
 <table>
     <thead>

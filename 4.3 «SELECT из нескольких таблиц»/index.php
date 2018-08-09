@@ -22,12 +22,13 @@ if (array_key_exists('action', $_GET)) {
 }
 
 if (empty($_SESSION)) {
-    header('Location: core/register.php');
+    echo '<a href="core/register.php">Войдите на сайт</a>';
+    die();
 }
 
 //echo '<pre>';
 //var_dump($_POST);
-
+//var_dump($_SESSION);
 ?>
 
 <!doctype html>

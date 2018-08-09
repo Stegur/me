@@ -8,21 +8,9 @@ if (array_key_exists('login', $_POST) && array_key_exists('pass', $_POST)) {
     $password = md5($salt . $pass);
 }
 
-if (array_key_exists('enter', $_POST)) {
-    $sql = "SELECT * FROM user where login='" . $login . "' AND password='" . $password . "'";
-    $user = $db->prepare($sql);
-    $user->execute();
-    $result = $user->fetch(PDO::FETCH_ASSOC);
-    if ($result) {
-        $_SESSION['login'] = $result['login'];
-        $_SESSION['id'] = $result['id'];
-        header('Location: ../index.php');
-    } else {
-        echo "<p>Неверный логин/пароль.</p>";
-    }
-}
 
 //echo '<pre>';
+//var_dump($_POST);
 //var_dump($_SESSION);
 ?>
 
@@ -36,14 +24,20 @@ if (array_key_exists('enter', $_POST)) {
 
 <?php
 
-if (array_key_exists('reg', $_POST)) {
-    $sql = "SELECT * FROM user where login='" . $login . "'";
+if (array_key_exists('login', $_POST) && array_key_exists('pass', $_POST)) {
+    $sql = "SELECT * FROM user where login='" . $login . "' AND password='" . $password . "'";
     $user = $db->prepare($sql);
     $user->execute();
     $result = $user->fetch(PDO::FETCH_ASSOC);
-    if ($result) {
+    if ($result && array_key_exists('enter', $_POST)) {
+        $_SESSION['login'] = $result['login'];
+        $_SESSION['id'] = $result['id'];
+        header('Location: ../index.php');
+    } elseif (!$result && array_key_exists('enter', $_POST)) {
+        echo "<p>Неверный логин/пароль.</p>";
+    } elseif ($result && array_key_exists('reg', $_POST)) {
         echo "<p>Такой пользователь уже существует в базе данных.</p>";
-    } else {
+    } elseif (!$result && array_key_exists('reg', $_POST)) {
         $sql = "INSERT INTO user(`id`, `login`, `password`) VALUES (null ,'" . $login . "','" . $password . "')";
         $addNewUser = $db->prepare($sql);
         $addNewUser->execute();

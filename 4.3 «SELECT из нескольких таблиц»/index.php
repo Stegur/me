@@ -21,6 +21,10 @@ if (array_key_exists('action', $_GET)) {
     }
 }
 
+if (empty($_SESSION)) {
+    header('Location: core/register.php');
+}
+
 //echo '<pre>';
 //var_dump($_POST);
 
@@ -73,9 +77,10 @@ if (array_key_exists('action', $_GET)) {
     </style>
 </head>
 <body>
-<h1>Список дел на сегодня</h1>
 
 <?php
+echo "<h1>Здравствуйте, {$_SESSION['login']}! Вот ваш список дел:</h1><br>";
+
 if (array_key_exists('action', $_GET) && $_GET['action'] == 'edit') {
     echo '<form action="index.php?id=' . (int)$_GET['id'] . '" name="edit" method="post">
         <input type="text" name="edit" value="';
@@ -131,5 +136,10 @@ if (array_key_exists('edit', $_POST)) {
     <?php endforeach; ?>
     </tbody>
 </table>
+
+<table>
+    
+</table>
+<div><a href="core/logout.php">Выход</a></div>
 </body>
 </html>

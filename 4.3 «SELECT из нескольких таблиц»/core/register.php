@@ -34,7 +34,7 @@ if (array_key_exists('login', $_POST) && array_key_exists('pass', $_POST)) {
         $_SESSION['id'] = $result['id'];
         header('Location: ../index.php');
     } elseif (!$result && array_key_exists('enter', $_POST)) {
-        echo "<p>Неверный логин/пароль.</p>";
+        echo "<p>Такой пользователь не существует, либо неверный пароль.</p>";
     } elseif ($result && array_key_exists('reg', $_POST)) {
         echo "<p>Такой пользователь уже существует в базе данных.</p>";
     } elseif (!$result && array_key_exists('reg', $_POST)) {

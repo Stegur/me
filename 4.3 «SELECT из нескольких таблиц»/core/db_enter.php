@@ -17,7 +17,7 @@ if (array_key_exists('list', $_POST)) {
         $sql = "SELECT * FROM tasks ORDER BY description";
     }
 } else {
-    $sql = "SELECT * FROM tasks";
+    $sql = "SELECT * FROM task";
 }
 
 $connect_str = DB_DRIVER . ':host=' . DB_HOST . ';dbname=' . DB_NAME;

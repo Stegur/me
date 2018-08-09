@@ -3,19 +3,19 @@
 require_once 'core/db_enter.php';
 
 if (array_key_exists('add', $_POST)) {
-    $add = "INSERT INTO `tasks`(`description`, `is_done`, `date_added`) VALUES ('" . strip_tags($_POST['add']) . "', 0, CURRENT_TIMESTAMP)";
+    $add = "INSERT INTO task(`id`, `user_id`, `assigned_user_id`, `description`, `is_done`, `date_added`) VALUES (null,{$_SESSION['id']},{$_SESSION['id']},'" . strip_tags($_POST['add']) . "',0,CURRENT_TIMESTAMP)";
     $db->exec($add);
     header('Location: index.php');
 }
 if (array_key_exists('action', $_GET)) {
     if ($_GET['action'] == 'delete') {
-        $delete = "DELETE FROM `tasks` WHERE id=" . (int)$_GET['id'] . " LIMIT 1";
+        $delete = "DELETE FROM task WHERE id=" . (int)$_GET['id'] . " LIMIT 1";
         $db->exec($delete);
         header('Location: index.php');
     }
     
     if ($_GET['action'] == 'done') {
-        $done = "UPDATE `tasks` SET `is_done`=1 WHERE id=" . (int)$_GET['id'] . " LIMIT 1";
+        $done = "UPDATE task SET `is_done`=1 WHERE id=" . (int)$_GET['id'] . " LIMIT 1";
         $db->exec($done);
         header('Location: index.php');
     }
@@ -86,7 +86,7 @@ if (array_key_exists('action', $_GET) && $_GET['action'] == 'edit') {
     echo '<form action="index.php?id=' . (int)$_GET['id'] . '" name="edit" method="post">
         <input type="text" name="edit" value="';
     
-    $sql = "SELECT * FROM `tasks` WHERE id=" . (int)$_GET['id'];
+    $sql = "SELECT * FROM task WHERE id=" . (int)$_GET['id'];
     $values = $db->query($sql);
     foreach ($values as $value) {
         echo $value['description'];
@@ -99,7 +99,7 @@ if (array_key_exists('action', $_GET) && $_GET['action'] == 'edit') {
           </form>';
 }
 if (array_key_exists('edit', $_POST)) {
-    $edit = "UPDATE tasks SET description='" . strip_tags($_POST['edit']) . "' WHERE id=" . (int)$_GET['id'] . " LIMIT 1";
+    $edit = "UPDATE task SET description='" . strip_tags($_POST['edit']) . "' WHERE id=" . (int)$_GET['id'] . " LIMIT 1";
     $db->exec($edit);
     header('Location: index.php');
 } ?>
@@ -121,6 +121,9 @@ if (array_key_exists('edit', $_POST)) {
         <td>Дата добавления</td>
         <td>Статус</td>
         <td></td>
+        <td>Ответственный</td>
+        <td>Автор</td>
+        <td>Закрепить задачу</td>
     </tr>
     </thead>
     <tbody>
@@ -133,6 +136,9 @@ if (array_key_exists('edit', $_POST)) {
                 <a href="index.php?action=done&id=<?= $rows['id'] ?>">Выполнить</a>
                 <a href="index.php?action=delete&id=<?= $rows['id'] ?>">Удалить</a>
             </td>
+            <td><?= ($rows['assigned_user_id'] == $_SESSION['id']) ? 'Вы' : $rows['assigned_user_id'] ?></td>
+            <td><?php echo $rows['user_id'] ?></td>
+            <td>Select и кнопка</td>
         </tr>
     <?php endforeach; ?>
     </tbody>

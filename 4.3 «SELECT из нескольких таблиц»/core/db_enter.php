@@ -10,11 +10,11 @@ define('DB_PASS', '');
 
 if (array_key_exists('list', $_POST)) {
     if ($_POST['list'] == 'date') {
-        $sql = "SELECT * FROM tasks ORDER BY date_added";
+        $sql = "SELECT * FROM task ORDER BY date_added";
     } elseif ($_POST['list'] == 'done') {
-        $sql = "SELECT * FROM tasks ORDER BY is_done";
+        $sql = "SELECT * FROM task ORDER BY is_done";
     } elseif ($_POST['list'] == 'description') {
-        $sql = "SELECT * FROM tasks ORDER BY description";
+        $sql = "SELECT * FROM task ORDER BY description";
     }
 } else {
     $sql = "SELECT * FROM task";
@@ -23,7 +23,7 @@ if (array_key_exists('list', $_POST)) {
 $connect_str = DB_DRIVER . ':host=' . DB_HOST . ';dbname=' . DB_NAME;
 $db = new PDO($connect_str, DB_USER, DB_PASS);
 
-$result = $db->query($sql);
+$tasks = $db->query($sql);
 
 $error_array = $db->errorInfo();
 if ($db->errorCode() != 0000) {

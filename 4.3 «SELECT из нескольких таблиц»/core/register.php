@@ -8,22 +8,6 @@ if (array_key_exists('login', $_POST) && array_key_exists('pass', $_POST)) {
     $password = md5($salt . $pass);
 }
 
-
-//echo '<pre>';
-//var_dump($_POST);
-//var_dump($_SESSION);
-?>
-
-<!doctype html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title>Вход</title>
-</head>
-<body>
-
-<?php
-
 if (array_key_exists('login', $_POST) && array_key_exists('pass', $_POST)) {
     $sql = "SELECT * FROM user where login='" . $login . "' AND password='" . $password . "'";
     $user = $db->prepare($sql);
@@ -54,11 +38,23 @@ if (array_key_exists('login', $_POST) && array_key_exists('pass', $_POST)) {
     echo "<p>Введите данные для регистрации или войдите, если уже регистрировались:</p>";
 }
 
+
+//echo '<pre>';
+//var_dump($_POST);
+//var_dump($_SESSION);
 ?>
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Вход</title>
+</head>
+<body>
 
 <form action="register.php" method="post">
     <input type="text" name="login" placeholder="Логин"> <input type="password" name="pass" placeholder="Пароль">
     <input type="submit" value="Вход" name="enter"> <input type="submit" value="Регистрация" name="reg">
 </form>
+
 </body>
 </html>

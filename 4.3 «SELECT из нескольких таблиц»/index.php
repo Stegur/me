@@ -20,7 +20,7 @@ if (array_key_exists('action', $_GET)) {
     }
     
     if ($_GET['action'] == 'done') {
-        $done = "UPDATE task SET `is_done`=1 WHERE id=" . (int)$_GET['id'] . " LIMIT 1";
+        $done = "UPDATE task SET is_done=1 WHERE id=" . (int)$_GET['id'] . " LIMIT 1";
         $db->exec($done);
         header('Location: index.php');
     }
@@ -29,13 +29,14 @@ if (array_key_exists('action', $_GET)) {
 if (array_key_exists('assign', $_POST)) {
     $assign = "UPDATE task SET assigned_user_id=" . $_POST['assigned_user'] . " WHERE id=" . (int)$_GET['id'] . " LIMIT 1";
     $db->exec($assign);
-    header('Location: index.php');
+//    header('Location: index.php');
 }
 
 
 //echo '<pre>';
 //var_dump($_POST);
 //var_dump($_GET);
+//var_dump($_SESSION);
 ?>
 
 <!doctype html>
@@ -43,46 +44,7 @@ if (array_key_exists('assign', $_POST)) {
 <head>
     <meta charset="UTF-8">
     <title>TODO List</title>
-    <style>
-        table {
-            table-layout: auto;
-            border: solid 1px gray;
-            border-collapse: collapse;
-            border-spacing: 0;
-        }
-
-        thead {
-            background: #dfdfdf;
-            text-align: center;
-            font-weight: bold;
-        }
-
-        td {
-            padding: 5px;
-            border: solid 1px gray;
-        }
-
-        tr:hover {
-            background: #eaeaea;
-        }
-
-        .done {
-            color: green;
-        }
-
-        .process {
-            color: #cbcb00;
-        }
-
-        form {
-            display: inline-block;
-        }
-
-        p {
-            margin: 0 0 10px 10px;
-        }
-
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
@@ -117,10 +79,12 @@ if (array_key_exists('edit', $_POST)) {
             <option value="date">дате обновления</option>
             <option value="done">статусу</option>
             <option value="description">описанию</option>
+            <option value="assigned">ответственному</option>
+            <option value="author">автору</option>
         </select>
         <input type="submit" value="Отсортировать">
+    </p>
 </form>
-</p>
 
 <table>
     <thead>
@@ -141,12 +105,14 @@ if (array_key_exists('edit', $_POST)) {
             <td><?php echo $task['date_added'] ?></td>
             <td><?= ($task['is_done'] == 1) ? '<span class="done">Выполнено</span>' : '<span class="process">В процессе</span>' ?></td>
             <td><a href="index.php?action=edit&id=<?= $task['id'] ?>">Изменить</a>
-                <a href="index.php?action=done&id=<?= $task['id'] ?>">Выполнить</a>
+                <?php
+                if ($task['assigned_user_id'] == $_SESSION['id']) : ?>
+                    <a href="index.php?action=done&id=<?= $task['id'] ?>">Выполнить</a>
+                <?php endif;?>
                 <a href="index.php?action=delete&id=<?= $task['id'] ?>">Удалить</a>
-                <!--           todo      если не ответственный убрать кнопку выполнить-->
             </td>
-            <td><?= ($task['assigned_user_id'] == $_SESSION['id']) ? 'Вы' : $task['assigned_user_id'] ?></td>
-            <td><?= ($task['assigned_user_id'] == $_SESSION['id']) ? 'Вы' : $task['assigned_user_id'] ?></td>
+            <td><?= ($task['assigned_user_id'] == $_SESSION['id']) ? 'Я' : $task['login'] ?></td>
+            <td><?= ($task['user_id'] == $_SESSION['id']) ? 'Я' : $task['login'] ?></td>
             <td>
                 <form action="index.php?id=<?= $task['id'] ?>" method="post">
                     <select name="assigned_user">
@@ -182,7 +148,7 @@ if (array_key_exists('edit', $_POST)) {
     </thead>
     <tbody>
     <?php
-    $sql = "SELECT * FROM task WHERE assigned_user_id='" . $_SESSION['id'] . "'";
+    $sql = "SELECT t.id, t.user_id ,t.assigned_user_id, t.description, t.is_done, t.date_added, u.login FROM task as t JOIN user AS u ON u.id=t.user_id WHERE assigned_user_id='" . $_SESSION['id'] . "'";
     $usersTasks = $db->query($sql);
     foreach ($usersTasks as $task) : ?>
 
@@ -193,10 +159,9 @@ if (array_key_exists('edit', $_POST)) {
             <td><a href="index.php?action=edit&id=<?= $task['id'] ?>">Изменить</a>
                 <a href="index.php?action=done&id=<?= $task['id'] ?>">Выполнить</a>
                 <a href="index.php?action=delete&id=<?= $task['id'] ?>">Удалить</a>
-                <!--           todo      если не ответственный убрать кнопку выполнить-->
             </td>
-            <td><?= ($task['assigned_user_id'] == $_SESSION['id']) ? 'Вы' : $task['assigned_user_id'] ?></td>
-            <td><?= ($task['assigned_user_id'] == $_SESSION['id']) ? 'Вы' : $task['assigned_user_id'] ?></td>
+            <td><?= ($task['assigned_user_id'] == $_SESSION['id']) ? 'Я' : $task['login'] ?></td>
+            <td><?= ($task['user_id'] == $_SESSION['id']) ? 'Я' : $task['login'] ?></td>
         </tr>
     
     <?php endforeach; ?>

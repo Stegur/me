@@ -48,19 +48,18 @@ if (empty($_GET)) :?>
         <br>
         <input type="submit" value="Создать таблицу '<?= $name ?>' на <?= $cols ?> столбцов">
     </form>
-<?php endif;
-if (array_key_exists('name', $_GET)) {
-    $tableName = strip_tags($_GET['name']);
-    $sql = "CHECK TABLE {$tableName}";
-    $findTable = $db->prepare($sql);
-    $findTable->execute();
-    $isExist = $findTable->fetch(PDO::FETCH_ASSOC);
-    if ($isExist['Msg_text'] == 'OK') {
-        echo "<h2>Ваша таблица {$tableName} создана</h2>";
-    } else {
-        echo "<h2>Ваша таблица {$tableName} не создана</h2>";
-    }
+<?php endif;?>
+<p>Существующие таблицы:</p>
+<?php
+if (!array_key_exists('tablename', $_GET))
+$sql = "Show TABLES";
+$showTable = $db->prepare($sql);
+$showTable->execute();
+$tables = $showTable->fetchAll(PDO::FETCH_ASSOC);
+foreach ($tables as $table) {
+    echo "<a href=\"tables.php?tablename={$table['Tables_in_tables']}\">" . $table['Tables_in_tables'] . "</a><br>";
 }
 ?>
+
 </body>
 </html>

@@ -1,4 +1,25 @@
-/*.create-rows input{*/
-    /*width: 120px;*/
-    /*margin-right: 3px;*/
-/*}*/
+table {
+    table-layout: auto;
+    border: solid 1px gray;
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+thead {
+    background: #dfdfdf;
+    text-align: center;
+    font-weight: bold;
+}
+
+td {
+    padding: 5px;
+    border: solid 1px gray;
+}
+
+tr:hover {
+    background: #eaeaea;
+}
+
+.small {
+    font-size: 80%;
+}

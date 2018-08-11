@@ -13,8 +13,7 @@ $db = new PDO($connect_str, DB_USER, DB_PASS);
 
 if (!empty($_POST)) {
     $cols = (int)$_GET['cols'];
-    $sql1 = "DROP TABLE IF EXISTS `{$_GET['name']}`;
-CREATE TABLE `{$_GET['name']}` (
+    $sql1 = "CREATE TABLE IF NOT EXISTS `{$_GET['name']}` (
 `id` int NOT NULL AUTO_INCREMENT,";
     
     

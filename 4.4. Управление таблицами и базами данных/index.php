@@ -16,7 +16,7 @@ include_once 'db_enter.php';
     <link rel="stylesheet" href="styles.css">
     <title>Tables</title>
 </head>
-<body>
+<p>
 
 <h1>Добро пожаловать в конструктор таблиц MySQL</h1>
 <!--todo вставить кгопку отвменить все на каждом этапе-->
@@ -32,7 +32,8 @@ if (empty($_GET)) :?>
 <?php elseif (empty($_POST)) :
     $cols = (int)$_GET['cols'];
     $name = strip_tags($_GET['name']); ?>
-    <p>Введите названия столбцов для вашей таблицы и их парметры</p>
+    <p>Введите названия столбцов (начиная со второго*) для таблицы <b><?= $name ?></b> и их парметры<br>
+        *Первый столбец устанавливается по-умолчанию и называется `id`</p>
     <form action="index.php?cols=<?= $cols ?>&name=<?= $name ?>" class="create-rows" method="post">
         <table>
             <?php
@@ -48,8 +49,10 @@ if (empty($_GET)) :?>
         <br>
         <input type="submit" value="Создать таблицу '<?= $name ?>' на <?= $cols ?> столбцов">
     </form>
+<p><a href="index.php">Отменить создание таблицы</a></p>
 <?php endif;?>
-<p>Существующие таблицы:</p>
+<p>Существующие таблицы:<br>
+    <a class="small" href="index.php">обновить</a></p>
 <?php
 if (!array_key_exists('tablename', $_GET))
 $sql = "Show TABLES";

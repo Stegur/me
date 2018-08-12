@@ -12,8 +12,9 @@ $connect_str = DB_DRIVER . ':host=' . DB_HOST . ';dbname=' . DB_NAME;
 $db = new PDO($connect_str, DB_USER, DB_PASS);
 
 if (!empty($_POST)) {
-    $cols = (int)$_GET['cols'];
-    $sql1 = "CREATE TABLE IF NOT EXISTS `{$_GET['name']}` (
+    $cols = (int)strip_tags($_GET['cols']);
+    $name = (string)strip_tags($_GET['name']);
+    $sql1 = "CREATE TABLE IF NOT EXISTS `{$name}` (
 `id` int NOT NULL AUTO_INCREMENT,";
     
     
@@ -28,8 +29,12 @@ if (!empty($_POST)) {
 PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 }
-// todo Пожалуйста, помогите оптимизироапть кодя, что бы работал для любого количества ячеек!
-$sql = $sql1 . $sql2[1] . $sql2[2] . $sql2[3] . $sql3;
+// todo Пожалуйста, помогите оптимизироапть код, что бы он работал для любого количества ячеек!
+$sql = $sql1 . $sql2[0] . $sql2[1] . $sql2[2] . $sql3;
+
+//echo '<pre>';
+//var_dump($_GET);
+//var_dump($_POST);
 
 $pleaseWork = $db->prepare($sql);
 $pleaseWork->execute();

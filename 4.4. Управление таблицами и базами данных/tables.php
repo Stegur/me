@@ -27,20 +27,23 @@ if (array_key_exists('action', $_GET)) {
         $updateName->execute();
         header($location);
     }
-    if ($_GET['action'] == 'changetype') {
-    
+    elseif ($_GET['action'] == 'changetype' && array_key_exists('name', $_POST)) {
+        $newFieldType = strip_tags($_POST['name']);
+        $sql = "ALTER TABLE {$tableName} MODIFY {$newFieldType}";
+        $updateType = $db->prepare($sql);
+        $updateType->execute();
+        header($location);
     }
-    if ($_GET['action'] == 'delete') {
+    elseif ($_GET['action'] == 'delete') {
         $sql = "ALTER TABLE {$tableName} DROP COLUMN {$field}";
         $delete = $db->prepare($sql);
         $delete->execute();
         header($location);
-        
     }
 }
-echo '<pre>';
-var_dump($_GET);
-var_dump($_POST);
+//echo '<pre>';
+//var_dump($_GET);
+//var_dump($_POST);
 ?>
 
 <!doctype html>
@@ -51,13 +54,21 @@ var_dump($_POST);
     <title>Просмотр и редактирование таблицы</title>
 </head>
 <body>
-<h1>Просмотр и редактирование таблицы <?= strip_tags($_GET['tablename']) ?></h1>
+<h1>Просмотр и редактирование таблицы "<?= strip_tags($_GET['tablename']) ?>"</h1>
 <?php
 if (array_key_exists('action',$_GET) && $_GET['action'] == 'changename') :?>
 <p>Введите новое имя поля и его параметры</p>
     <form action="tables.php?tablename=<?= $tableName ?>&field=<?= strip_tags($_GET['field']) ?>&action=changename" method="post">
         <input type="text" name="name" value="<?= strip_tags($_GET['field']) ?> "><input type="submit"value="Изменить имя поля">
-    </form>
+    </form><br>
+<?php endif;?>
+
+<?php
+if (array_key_exists('action',$_GET) && $_GET['action'] == 'changetype') :?>
+<p>Введите имя изменяемого поля и его новые параметры</p>
+<form action="tables.php?tablename=<?= $tableName ?>&field=<?= strip_tags($_GET['field']) ?>&action=changetype" method="post">
+    <input type="text" name="name" value="<?= strip_tags($_GET['field']) ?> "><input type="submit"value="Изменить имя поля">
+</form><br>
 <?php endif;?>
 
 <table>
@@ -86,12 +97,12 @@ if (array_key_exists('action',$_GET) && $_GET['action'] == 'changename') :?>
                 <td><?= $data['Extra'] ?></td>
             </tr>
         <? endforeach; ?>
-        <form action="tables.php?tablename=<?= $tableName ?>" method="post">
-            <input type="text" placeholder="имя поля с парметрами" name="add">
-            <input type="submit" value="Добавить поле">
-        </form>
     </tbody>
-</table>
+</table><br>
+<form action="tables.php?tablename=<?= $tableName ?>" method="post">
+    <input type="text" placeholder="имя поля с парметрами" name="add">
+    <input type="submit" value="Добавить поле">
+</form>
 
 <p><a href="index.php">Создать новую таблицу или поссмотреть существующие</a></p>
 </body>

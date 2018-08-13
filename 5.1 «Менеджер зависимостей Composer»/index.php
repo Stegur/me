@@ -21,11 +21,15 @@ if (array_key_exists('address', $_POST)) {
 //var_dump($_GET);
 
 
-
 ?>
 <!DOCTYPE html>
 <html lang="ru">
 <head>
+    <style>
+    .style {
+        display: inline-block;
+    }
+    </style>
     <title>My map</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript">
@@ -34,7 +38,7 @@ if (array_key_exists('address', $_POST)) {
         ymaps.ready(init);
 
         function init() {
-            var myMap = new ymaps.Map("map", {
+            var myMap = new ymaps.Map("map-ya", {
                 center: [<?= (float)strip_tags($_GET['latitude']) ?>, <?= (float)strip_tags($_GET['longitude']) ?>],
                 zoom: 9
             });
@@ -50,7 +54,28 @@ if (array_key_exists('address', $_POST)) {
             // можно добавить на карту.
             myMap.geoObjects.add(myPlacemark);
         }
+
+        function initMap() {
+            var myLatLng = {lat: <?= (float)strip_tags($_GET['latitude']) ?>, lng: <?= (float)strip_tags($_GET['longitude']) ?>};
+
+            // Create a map object and specify the DOM element
+            // for display.
+            var map = new google.maps.Map(document.getElementById('map-google'), {
+                center: myLatLng,
+                zoom: 9
+            });
+
+            // Create a marker and set its position.
+            var marker = new google.maps.Marker({
+                map: map,
+                position: myLatLng,
+                title: '<?= (string)strip_tags($_GET['name']) ?>'
+            });
+        }
+
     </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=netology-geo&callback=initMap"
+            async defer></script>
 </head>
 <body>
 <form action="index.php" method="post">
@@ -68,12 +93,23 @@ if ($list) {
         echo "<a href='index.php?name={$name}&latitude={$latitude}&longitude={$longitude}'>{$name}</a><br>";
     }
 }
-if (array_key_exists('latitude',$_GET) && array_key_exists('latitude',$_GET)) {
-    echo '<div id="map" style="width: 600px; height: 400px"></div>';
+if (array_key_exists('latitude', $_GET) && array_key_exists('latitude', $_GET)) {
+    echo '<div class="style" id="map-ya" style="width: 600px; height: 400px"></div>';
+    echo "<div class=\"style\" id='printoutPanel'></div>";
+    echo "<div class=\"style\" id='myMap' style='width: 600px; height: 400px;'></div>";
+    echo '<div class="style" id="map-google" style="width: 600px; height: 400px"></div>';
 }
 ?>
+<script type='text/javascript'>
+    function loadMapScenario() {
+        var map = new Microsoft.Maps.Map(document.getElementById('myMap'), {
+            /* No need to set credentials if already passed in URL */
+            center: new Microsoft.Maps.Location(<?= (float)strip_tags($_GET['latitude']) ?>, <?= (float)strip_tags($_GET['longitude']) ?>),
+            mapTypeId: Microsoft.Maps.MapTypeId.aerial,
+            zoom: 9 });
 
-
-
+    }
+</script>
+<script type='text/javascript' src='https://www.bing.com/api/maps/mapcontrol?key=YourBingMapsKey&callback=loadMapScenario' async defer></script>
 </body>
 </html>

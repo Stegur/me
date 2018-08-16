@@ -8,6 +8,15 @@ class Car                   //Класс без методов
     public $maxSpeed;
     public $fuel;
     
+    public function __construct($brand, $model, $color, $maxSpeed, $fuel)
+    {
+        $this->brand = $brand;
+        $this->model = $model;
+        $this->color = $color;
+        $this->maxSpeed = $maxSpeed;
+        $this->fuel = $fuel;
+    }
+    
 }
 
 class Television            //Класс с методами
@@ -17,6 +26,13 @@ class Television            //Класс с методами
     public $diagonal;
     public $matrix;
     
+    public function __construct($brand, $color, $diagonal, $matrix)
+    {
+        $this->brand = $brand;
+        $this->color = $color;
+        $this->diagonal = $diagonal;
+        $this->matrix = $matrix;
+    }
     
     public function getColor(): string
     {
@@ -36,9 +52,10 @@ class Pen                   //Класс с конструктором
     public $size = 'medium';
     public $button;
     
-    public function __construct(string $inkColor, bool $button)
+    public function __construct(string $inkColor, $size, bool $button)
     {
         $this->inkColor = $inkColor;
+        $this->size = $size;
         $this->button = $button;
     }
 }
@@ -48,6 +65,13 @@ class Duck                  //Класс с приватными свойств�
     private $name;
     private $color;
     private $location;
+    
+    public function __construct($name, $color, $location)
+    {
+        $this->name = $name;
+        $this->color = $color;
+        $this->location = $location;
+    }
     
     public function setName(string $name)
     {
@@ -75,8 +99,11 @@ class Product               //Класс с константой и статич
     public static $count = 0;
     const CONST = 'Новый товар';
     
-    public function __construct() //Не уверен что правильно реализовал подсчет Id для новых продуктов
+    public function __construct($name, $price, $unit) //Не уверен что правильно реализовал подсчет Id для новых продуктов
     {
+        $this->name = $name;
+        $this->price = $price;
+        $this->unit = $unit;
         $this->productId = 1 + self::$count++;
         return $this->productId;
     }
@@ -85,19 +112,9 @@ class Product               //Класс с константой и статич
 
 //////////////////////////////////////////////////////////////////////////
 
-$mercedesX = new Car();
-$mercedesX->brand = 'Mercedes';
-$mercedesX->model = 'X';
-$mercedesX->color = 'Red';
-$mercedesX->maxSpeed = '220';
-$mercedesX->fuel = 'gas';
+$mercedesX = new Car("Mercedes", "X", "Red", 220, "gas");
 
-$LadaY = new Car();
-$LadaY->brand = 'Lada';
-$LadaY->model = 'Y';
-$LadaY->color = 'Silver';
-$LadaY->maxSpeed = '180';
-$LadaY->fuel = 'diesel';
+$LadaY = new Car("Lda", "Y", "Silver", 180, "diesel");
 
 //echo '<pre>';
 //var_dump($mercedesX);
@@ -105,17 +122,9 @@ $LadaY->fuel = 'diesel';
 
 ////////////////////////////////////////////////////////////////////////
 
-$myNewTv = new Television();
-$myNewTv->brand = 'LG';
-$myNewTv->color = 'white';
-$myNewTv->setDiagonal('55.5');
-$myNewTv->matrix = 'LCD';
+$myNewTv = new Television("LG", "white", 55.5, "LCD");
 
-$myBrothersTv = new Television();
-$myBrothersTv->brand = 'Samsung';
-$myBrothersTv->getColor();
-$myBrothersTv->setDiagonal('65');
-$myBrothersTv->matrix = 'TFT';
+$myBrothersTv = new Television("Samsung", "black", 65, "TFT");
 
 //echo '<pre>';
 //var_dump($myNewTv);
@@ -123,10 +132,10 @@ $myBrothersTv->matrix = 'TFT';
 
 //////////////////////////////////////////////////////////////////////
 
-$firstPen = new Pen('blue', false);
+$firstPen = new Pen('blue', 'medium', false);
 
-$secondPen = new Pen('red', true);
-$secondPen->size = 'small';
+$secondPen = new Pen('red', 'small', true);
+
 
 //echo '<pre>';
 //var_dump($firstPen);
@@ -134,15 +143,9 @@ $secondPen->size = 'small';
 
 /////////////////////////////////////////////////////////////////////
 
-$daffy = new Duck();
-$daffy->setName('Daffy');
-$daffy->setColor('black');
-$daffy->setLocation('USA');
+$daffy = new Duck('Daffy', 'black', 'USA');
 
-$howard = new Duck();
-$howard->setName('Howard');
-$howard->setColor('white');
-$howard->setLocation('Europe');
+$howard = new Duck('Howard', 'white', 'Europe');
 
 //echo '<pre>';
 //var_dump($daffy);
@@ -150,15 +153,9 @@ $howard->setLocation('Europe');
 
 //////////////////////////////////////////////////////////////////////
 
-$iceCream = new Product();
-$iceCream->name = 'Пломбир';
-$iceCream->price = '40';
-$iceCream->unit = 'шт';
+$iceCream = new Product('Пломбир', 40, 'шт');
 
-$tomatoes = new Product();
-$tomatoes->name = 'Помидорки';
-$tomatoes->price = '100';
-$tomatoes->unit = 'кг';
+$tomatoes = new Product('Помидорки', 100, 'кг');
 
 //echo '<pre>';
 //var_dump($iceCream);

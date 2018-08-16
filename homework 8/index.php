@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/functions.php';
+require_once __DIR__ . '/core/functions.php';
 
 if (!empty($_SESSION)) {
     header('Location: list.php');

@@ -1,7 +1,7 @@
 <?php
-require_once __DIR__ . '/functions.php';
+require_once __DIR__ . '/core/functions.php';
 if (!empty($_SESSION)) {
-    echo "<div><a href='logout.php'>Выйти из сессии</a></div>";
+    echo "<div><a href='core/logout.php'>Выйти из сессии</a></div>";
 }
 
 if (array_key_exists('user', $_SESSION)) {

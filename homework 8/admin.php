@@ -1,11 +1,11 @@
 <?php
-require_once __DIR__ . '/functions.php';
+require_once __DIR__ . '/core/functions.php';
 if (array_key_exists('user', $_SESSION)) {
-    echo "<div><a href='logout.php'>Выйти из сессии</a></div>";
+    echo "<div><a href='core/logout.php'>Выйти из сессии</a></div>";
 }
 if (!array_key_exists('user', $_SESSION)) {
     http_response_code(403);
-    die;
+    die('403 Forbidden');
 }
 ?>
 

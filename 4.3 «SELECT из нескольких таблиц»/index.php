@@ -36,7 +36,7 @@ if (array_key_exists('assign', $_POST)) {
 //echo '<pre>';
 //var_dump($_POST);
 //var_dump($_GET);
-//var_dump($_SESSION);
+//var_dump($tasks);
 ?>
 
 <!doctype html>

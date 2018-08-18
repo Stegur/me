@@ -44,9 +44,9 @@ if (array_key_exists('action', $_GET)) {
         header($location);
     }
 }
-echo '<pre>';
-var_dump($_GET);
-var_dump($_POST);
+//echo '<pre>';
+//var_dump($_GET);
+//var_dump($_POST);
 ?>
 
 <!doctype html>

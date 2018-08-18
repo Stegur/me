@@ -1,7 +1,7 @@
 <?php
 require_once 'db_enter.php';
 if (array_key_exists('tablename', $_GET)) {
-    $tableName = strip_tags($_GET['tablename']);
+    $tableName = (string)strip_tags($_GET['tablename']);
     $location = "Location: tables.php?tablename={$tableName}";
     $sql = "DESCRIBE {$tableName};";
     $showTable = $db->prepare($sql);
@@ -9,27 +9,30 @@ if (array_key_exists('tablename', $_GET)) {
     $result = $showTable->fetchAll(PDO::FETCH_ASSOC);
 }
 
-if (array_key_exists('add', $_POST)) {
-    $newField = strip_tags($_POST['add']);
-    $sql = "ALTER TABLE {$tableName} ADD {$newField}";
+if (array_key_exists('addName', $_POST) && array_key_exists('addParam', $_POST)) {
+    $newFieldName = (string)strip_tags($_POST['addName']);
+    $newFieldParam = $_POST['addParam'];
+    $sql = "ALTER TABLE {$tableName} ADD {$newFieldName} {$newFieldParam}";
     $add = $db->prepare($sql);
     $add->execute();
     header($location);
 }
 
 if (array_key_exists('action', $_GET)) {
-    $field = strip_tags($_GET['field']);
-    if ($_GET['action'] == 'changename' && array_key_exists('name', $_POST)) {
-        $oldName = strip_tags($_GET['field']);
-        $newName = strip_tags($_POST['name']);
-        $sql = "ALTER TABLE {$tableName} CHANGE {$oldName} {$newName}";
+    $field = (string)strip_tags($_GET['field']);
+    if ($_GET['action'] == 'changename' && array_key_exists('newName', $_POST)) {
+        $oldName = (string)strip_tags($_GET['field']);
+        $newName = (string)strip_tags($_POST['newName']);
+        $fieldParam = $_POST['param'];
+        $sql = "ALTER TABLE {$tableName} CHANGE {$oldName} {$newName} {$fieldParam}";
         $updateName = $db->prepare($sql);
         $updateName->execute();
         header($location);
     }
     elseif ($_GET['action'] == 'changetype' && array_key_exists('name', $_POST)) {
-        $newFieldType = strip_tags($_POST['name']);
-        $sql = "ALTER TABLE {$tableName} MODIFY {$newFieldType}";
+        $fieldName = (string)strip_tags($_POST['name']);
+        $newFieldType = (string)strip_tags($_POST['param']);
+        $sql = "ALTER TABLE {$tableName} MODIFY {$fieldName} {$newFieldType}";
         $updateType = $db->prepare($sql);
         $updateType->execute();
         header($location);
@@ -41,9 +44,9 @@ if (array_key_exists('action', $_GET)) {
         header($location);
     }
 }
-//echo '<pre>';
-//var_dump($_GET);
-//var_dump($_POST);
+echo '<pre>';
+var_dump($_GET);
+var_dump($_POST);
 ?>
 
 <!doctype html>
@@ -54,20 +57,33 @@ if (array_key_exists('action', $_GET)) {
     <title>Просмотр и редактирование таблицы</title>
 </head>
 <body>
-<h1>Просмотр и редактирование таблицы "<?= strip_tags($_GET['tablename']) ?>"</h1>
+<h1>Просмотр и редактирование таблицы "<?= (string)strip_tags($_GET['tablename']) ?>"</h1>
 <?php
 if (array_key_exists('action',$_GET) && $_GET['action'] == 'changename') :?>
 <p>Введите новое имя поля и его параметры</p>
-    <form action="tables.php?tablename=<?= $tableName ?>&field=<?= strip_tags($_GET['field']) ?>&action=changename" method="post">
-        <input type="text" name="name" value="<?= strip_tags($_GET['field']) ?> "><input type="submit"value="Изменить имя поля">
+    <form action="tables.php?tablename=<?= $tableName ?>&field=<?= (string)strip_tags($_GET['field']) ?>&action=changename" method="post">
+        <input type="text" name="oldName" value="<?= (string)strip_tags($_GET['field']) ?> ">
+        <input type="text" name="newName" placeholder="новое имя столбца" ">
+        <select name="param">
+            <option value="int (11)">int (11)</option>';
+            <option value="varchar (100)">varchar (100)</option>
+        </select>
+        <input type="submit"value="Изменить имя поля">
     </form><br>
 <?php endif;?>
 
 <?php
 if (array_key_exists('action',$_GET) && $_GET['action'] == 'changetype') :?>
 <p>Введите имя изменяемого поля и его новые параметры</p>
-<form action="tables.php?tablename=<?= $tableName ?>&field=<?= strip_tags($_GET['field']) ?>&action=changetype" method="post">
-    <input type="text" name="name" value="<?= strip_tags($_GET['field']) ?> "><input type="submit"value="Изменить имя поля">
+<form action="tables.php?tablename=<?= $tableName ?>&field=<?= (string)strip_tags($_GET['field']) ?>&action=changetype" method="post">
+    <input type="text" name="name" value="<?= (string)strip_tags($_GET['field']) ?> ">
+    <select name="param">
+        <option value="int (11)">int (11)</option>';
+        <option value="tinyint (4)">tinyint (4)</option>';
+        <option value="varchar (100)">varchar (100)</option>
+        <option value="float">float</option>
+    </select>
+    <input type="submit"value="Изменить имя поля">
 </form><br>
 <?php endif;?>
 
@@ -96,11 +112,15 @@ if (array_key_exists('action',$_GET) && $_GET['action'] == 'changetype') :?>
                 <td><?= ($data['Default'] == null) ? 'NULL' : $data['Default'] ?></td>
                 <td><?= $data['Extra'] ?></td>
             </tr>
-        <? endforeach; ?>
+        <?php endforeach; ?>
     </tbody>
 </table><br>
 <form action="tables.php?tablename=<?= $tableName ?>" method="post">
-    <input type="text" placeholder="имя поля с парметрами" name="add">
+    <input type="text" placeholder="имя поля" name="addName">
+    <select name="addParam">
+        <option value="int (11)">int (11)</option>';
+        <option value="varchar (100)">varchar (100)</option>
+    </select>
     <input type="submit" value="Добавить поле">
 </form>
 

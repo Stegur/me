@@ -24,17 +24,20 @@ if (!empty($_POST)) {
         $sql2[$i] = ' ' . strip_tags($_POST[$col]) . ' ' . strip_tags($_POST[$param]) . ' NULL, ';
         
     }
+    if (is_array($sql2)) {
+        $sql2 = implode($sql2);
+    }
     
     $sql3 = "
 PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 }
-// todo Пожалуйста, помогите оптимизироапть код, что бы он работал для любого количества ячеек!
-$sql = $sql1 . $sql2[0] . $sql2[1] . $sql2[2] . $sql3;
+
+$sql = $sql1 . $sql2 . $sql3;
 
 //echo '<pre>';
-//var_dump($_GET);
 //var_dump($_POST);
+//var_dump($sql);
 
 $pleaseWork = $db->prepare($sql);
 $pleaseWork->execute();

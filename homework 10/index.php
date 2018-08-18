@@ -2,8 +2,6 @@
 
 interface SuperInterface
 {
-
-    public function __construct($title, $price);
     
     public function getDescription();
     
@@ -17,15 +15,10 @@ abstract class SuperClass implements SuperInterface
     protected $title;
     protected $price;
     
-    public function __construct($title, $price)
-    {
-        $this->title = $title;
-        $this->price = $price;
-    }
     
     public function getDescription()
     {
-    
+        echo 'Текст от наследуемого элемента';
     }
     
     public function getTitle()
@@ -58,6 +51,15 @@ class Car extends SuperClass implements CarTemplate
         parent::getDescription();
     }
     
+    public function __construct($brand, $model, $color, $maxSpeed, $fuel)
+    {
+        $this->brand = $brand;
+        $this->model = $model;
+        $this->color = $color;
+        $this->maxSpeed = $maxSpeed;
+        $this->fuel = $fuel;
+    }
+    
 }
 
 interface TelevisionTemplate
@@ -77,6 +79,14 @@ class Television extends SuperClass implements TelevisionTemplate
     public function getDescription()
     {
         parent::getDescription();
+    }
+    
+    public function __construct($brand, $color, $diagonal, $matrix)
+    {
+        $this->brand = $brand;
+        $this->color = $color;
+        $this->diagonal = $diagonal;
+        $this->matrix = $matrix;
     }
     
     public function setColor(string $color)
@@ -107,6 +117,13 @@ class Pen extends SuperClass implements PenTemplate
     public function getDescription()
     {
         parent::getDescription();
+    }
+    
+    public function __construct(string $inkColor, $size, bool $button)
+    {
+        $this->inkColor = $inkColor;
+        $this->size = $size;
+        $this->button = $button;
     }
     
     public function getInkColor(): string
@@ -145,6 +162,13 @@ class Duck extends SuperClass implements DuckTemplate
         parent::getDescription();
     }
     
+    public function __construct($name, $color, $location)
+    {
+        $this->name = $name;
+        $this->color = $color;
+        $this->location = $location;
+    }
+    
     public function setName(string $name)
     {
         $this->name = $name;
@@ -169,43 +193,34 @@ interface ProductTemplate
 {
     const CONST = 'Новый товар';
     public function getDescription();
-    public function count();
 }
 
 class Product extends SuperClass implements ProductTemplate
 {
     public $unit;
     public $productId;
-    public static $count = 0;
+    public static $count;
     
     public function getDescription()
     {
         parent::getDescription();
     }
     
-    public function count() //Не уверен что правильно реализовал подсчет Id для новых продуктов
+    public function __construct($title, $price, $unit, $count = 0) //Не уверен что правильно реализовал подсчет Id для новых продуктов
     {
+        $this->title = $title;
+        $this->price = $price;
+        $this->unit = $unit;
         $this->productId = 1 + self::$count++;
-        return $this->productId;
     }
     
 }
 
 //////////////////////////////////////////////////////////////////////////
 
-$mercedesX = new Car('My First Car', 10000);
-$mercedesX->brand = 'Mercedes';
-$mercedesX->model = 'X';
-$mercedesX->color = 'Red';
-$mercedesX->maxSpeed = '220';
-$mercedesX->fuel = 'gas';
+$mercedesX = new Car("Mercedes", "X", "Red", 220, "gas");
 
-$LadaY = new Car('My Current Car', 2000);
-$LadaY->brand = 'Lada';
-$LadaY->model = 'Y';
-$LadaY->color = 'Silver';
-$LadaY->maxSpeed = '180';
-$LadaY->fuel = 'diesel';
+$LadaY = new Car("Lda", "Y", "Silver", 180, "diesel");
 
 //echo '<pre>';
 //var_dump($mercedesX);
@@ -213,16 +228,9 @@ $LadaY->fuel = 'diesel';
 
 ////////////////////////////////////////////////////////////////////////
 
-$myNewTv = new Television('My First TV', 100);
-$myNewTv->brand = 'LG';
-$myNewTv->color = 'white';
-$myNewTv->setDiagonal('55.5');
-$myNewTv->matrix = 'LCD';
+$myNewTv = new Television("LG", "white", 55.5, "LCD");
 
-$myBrothersTv = new Television('My Current TV', 5000);
-$myBrothersTv->brand = 'Samsung';
-$myBrothersTv->setDiagonal('65');
-$myBrothersTv->matrix = 'TFT';
+$myBrothersTv = new Television("Samsung", "black", 65, "TFT");
 
 //echo '<pre>';
 //var_dump($myNewTv);
@@ -230,14 +238,10 @@ $myBrothersTv->matrix = 'TFT';
 
 //////////////////////////////////////////////////////////////////////
 
-$firstPen = new Pen('Best Pen', 100);
-$firstPen->inkColor = 'Blue';
-$firstPen->button = true;
+$firstPen = new Pen('blue', 'medium', false);
 
-$secondPen = new Pen('Worse pen', 10);
-$secondPen->size = 'small';
-$secondPen->inkColor = 'Red';
-$secondPen->button = false;
+$secondPen = new Pen('red', 'small', true);
+
 
 //echo '<pre>';
 //var_dump($firstPen);
@@ -245,15 +249,9 @@ $secondPen->button = false;
 
 /////////////////////////////////////////////////////////////////////
 
-$daffy = new Duck('My First Duck', 0);
-$daffy->setName('Daffy');
-$daffy->setColor('black');
-$daffy->setLocation('USA');
+$daffy = new Duck('Daffy', 'black', 'USA');
 
-$howard = new Duck('My Current Duck', 0);
-$howard->setName('Howard');
-$howard->setColor('white');
-$howard->setLocation('Europe');
+$howard = new Duck('Howard', 'white', 'Europe');
 
 //echo '<pre>';
 //var_dump($daffy);
@@ -261,15 +259,9 @@ $howard->setLocation('Europe');
 
 //////////////////////////////////////////////////////////////////////
 
-$iceCream = new Product('Something old', 10);
-$iceCream->name = 'Пломбир';
-$iceCream->unit = 'шт';
-$iceCream->count();
+$iceCream = new Product('Пломбир', 40, 'шт');
 
-$tomatoes = new Product('Something new', 15);
-$tomatoes->name = 'Помидорки';
-$tomatoes->unit = 'кг';
-$tomatoes->count();
+$tomatoes = new Product('Помидорки', 100, 'кг');
 
 //echo '<pre>';
 //var_dump($iceCream);

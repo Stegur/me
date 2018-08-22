@@ -78,10 +78,7 @@ if (array_key_exists('address', $_POST)) {
             async defer></script>
 </head>
 <body>
-<form action="index.php" method="post">
-    <p>Введите запрос:</p>
-    <input type="text" name="address" placeholder="введите адрес"> <input type="submit" value="Найти">
-</form>
+
 <br>
 <?php
 if ($list) {
@@ -92,6 +89,11 @@ if ($list) {
         $longitude = $item->getLongitude();
         echo "<a href='index.php?name={$name}&latitude={$latitude}&longitude={$longitude}'>{$name}</a><br>";
     }
+} else {
+    echo '<form action="index.php" method="post">
+    <p>Введите запрос:</p>
+    <input type="text" name="address" placeholder="введите адрес"> <input type="submit" value="Найти">
+</form>';
 }
 if (array_key_exists('latitude', $_GET) && array_key_exists('latitude', $_GET)) {
     echo '<div class="style" id="map-ya" style="width: 600px; height: 400px"></div>';

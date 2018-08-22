@@ -3,9 +3,9 @@
 
 define('DB_DRIVER', 'mysql');
 define('DB_HOST', 'localhost');
-define('DB_NAME', 'tables');
-define('DB_USER', 'root');
-define('DB_PASS', '');
+define('DB_NAME', 'astegura');
+define('DB_USER', 'astegura');
+define('DB_PASS', 'neto1799');
 
 
 $connect_str = DB_DRIVER . ':host=' . DB_HOST . ';dbname=' . DB_NAME;
@@ -31,18 +31,19 @@ if (!empty($_POST)) {
     $sql3 = "
 PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
-}
-
-$sql = $sql1 . $sql2 . $sql3;
-
+    
+    
+    $sql = $sql1 . $sql2 . $sql3;
 //echo '<pre>';
 //var_dump($_POST);
 //var_dump($sql);
-
-$pleaseWork = $db->prepare($sql);
-$pleaseWork->execute();
-
-$error_array = $db->errorInfo();
-if ($db->errorCode() != 0000) {
-    echo "SQL ошибка: " . $error_array[2] . '<br>';
+    
+    $pleaseWork = $db->prepare($sql);
+    $pleaseWork->execute();
+    
+    $error_array = $db->errorInfo();
+    if ($db->errorCode() != 0000) {
+        echo "SQL ошибка: " . $error_array[2] . '<br>';
+    }
 }
+

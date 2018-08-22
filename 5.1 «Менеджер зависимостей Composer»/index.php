@@ -3,8 +3,8 @@ require __DIR__ . '/vendor/autoload.php';
 
 $api = new \Yandex\Geo\Api();
 
-if (array_key_exists('address', $_POST)) {
-    $address = (string)strip_tags($_POST['address']);
+if (array_key_exists('address', $_GET)) {
+    $address = (string)strip_tags($_GET['address']);
     $api->setQuery($address);
     $api->setLimit(10);
     $api->setLang(\Yandex\Geo\Api::LANG_RU);
@@ -12,7 +12,7 @@ if (array_key_exists('address', $_POST)) {
     
     $response = $api->getResponse();
     
-    $list = $response->getList();
+    $_GET['list'] = $response->getList();
     
 }
 
@@ -78,22 +78,21 @@ if (array_key_exists('address', $_POST)) {
             async defer></script>
 </head>
 <body>
-
+<form action="index.php" method="get">
+    <p>Введите запрос:</p>
+    <input type="text" name="address" placeholder="введите адрес"> <input type="submit" value="Найти">
+</form>
 <br>
 <?php
-if ($list) {
-    echo "<p>По Вашему запросу \"{$_POST['address']}\" найдены следующие совпадения:</p>";
+if (array_key_exists('list', $_GET)) {
+    $list = $_GET['list'];
+    echo "<p>По Вашему запросу \"{$_GET['address']}\" найдены следующие совпадения:</p>";
     foreach ($list as $item) {
         $name = $item->getAddress();
         $latitude = $item->getLatitude();
         $longitude = $item->getLongitude();
         echo "<a href='index.php?name={$name}&latitude={$latitude}&longitude={$longitude}'>{$name}</a><br>";
     }
-} else {
-    echo '<form action="index.php" method="post">
-    <p>Введите запрос:</p>
-    <input type="text" name="address" placeholder="введите адрес"> <input type="submit" value="Найти">
-</form>';
 }
 if (array_key_exists('latitude', $_GET) && array_key_exists('latitude', $_GET)) {
     echo '<div class="style" id="map-ya" style="width: 600px; height: 400px"></div>';
